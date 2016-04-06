@@ -1,0 +1,204 @@
+pt src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script><!-- jquery -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css" rel="stylesheet" /><script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script><!-- Compiled and minified CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" rel="stylesheet" /><!-- Compiled and minified JavaScript --><script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+<style type="text/css">.question-answer-card.mdl-card {
+  width: 100%;
+}
+</style>
+<nav style="height:auto; padding:10px 0px 10px 20px">
+<h3>Instructions:</h3>
+
+<ol>
+    <li>Read the given question</li>
+    <li>Read each of the answers and assess its quality from 1 (bad) - 4 (excellent)</li>
+    <li>Select one or more (if equal quality) best answers to the given question</li>
+</ol>
+<small>It is possible to receive a question that is in poor taste or a question that does not make sense.</small>
+
+<div class="row"><a class="col l8 offset-l2 btn waves-effect waves-light yellow lighten-2 blue-text" id="instructions_done">Click here when you are ready to see the question</a></div>
+</nav>
+
+<div class="mdl-grid">
+<div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset" id="question_card" style="display:none">
+<div class="question-answer-card mdl-card mdl-shadow--2dp">
+<div class="mdl-card__supporting-text"><small>${category}</small></div>
+
+<div class="mdl-card__title">
+<h2 class="mdl-card__title-text">${title}</h2>
+</div>
+
+<div class="mdl-card__supporting-text mdl-card--border" id="body">${body}</div>
+
+<div class="row"><a class="col l12 btn waves-effect waves-light yellow lighten-2 teal-text" id="question_done">Click here when you are done reading</a></div>
+</div>
+</div>
+</div>
+
+<div class="row"><a class="col l10 m10 s10 offset-l1 offset-m1 offset-s1 btn-large green white-text" id="timer" style="font-size:20px; display:none">Time left: 60 sec</a></div>
+
+<form id="mturk_form" method="post" name="mturk_form">
+<div class="row">
+<div id="answer_container" style="display:none"><input id="reading_time" name="reading_time" type="hidden" value="0" /> <input id="answering_time" name="answering_time" type="hidden" value="0" />
+<div class="col l4">
+<div class="card-panel">
+<p>${answer1}</p>
+
+<hr /><input id="rating_11" name="rating_1" required="" type="radio" value="1" /> <label for="rating_11">1: Bad - contains no useful information</label><br />
+<input id="rating_12" name="rating_1" required="" type="radio" value="2" /> <label for="rating_12">2: Fair - marginally useful information</label><br />
+<input id="rating_13" name="rating_1" required="" type="radio" value="3" /> <label for="rating_13">3: Good - partially answers the question</label><br />
+<input id="rating_14" name="rating_1" required="" type="radio" value="4" /> <label for="rating_14">4: Excellent - fully answers the question</label>
+
+<hr /> <input id="answer1" name="best_answer[]" type="checkbox" value="${src1}" /> <label for="answer1">This is the best answer</label></div>
+</div>
+
+<div class="col l4">
+<div class="card-panel">
+<p>${answer2}</p>
+
+<hr /><input id="rating_21" name="rating_2" required="" type="radio" value="1" /> <label for="rating_21">1: Bad - contains no useful information</label><br />
+<input id="rating_22" name="rating_2" required="" type="radio" value="2" /> <label for="rating_22">2: Fair - marginally useful information</label><br />
+<input id="rating_23" name="rating_2" required="" type="radio" value="3" /> <label for="rating_23">3: Good - partially answers the question</label><br />
+<input id="rating_24" name="rating_2" required="" type="radio" value="4" /> <label for="rating_24">4: Excellent - fully answers the question</label>
+
+<hr /> <input id="answer2" name="best_answer[]" type="checkbox" value="${src2}" /> <label for="answer2">This is the best answer</label></div>
+</div>
+
+<div class="col l4">
+<div class="card-panel">
+<p>${answer3}</p>
+
+<hr /><input id="rating_31" name="rating_3" required="" type="radio" value="1" /> <label for="rating_31">1: Bad - contains no useful information</label><br />
+<input id="rating_32" name="rating_3" required="" type="radio" value="2" /> <label for="rating_32">2: Fair - marginally useful information</label><br />
+<input id="rating_33" name="rating_3" required="" type="radio" value="3" /> <label for="rating_33">3: Good - partially answers the question</label><br />
+<input id="rating_34" name="rating_3" required="" type="radio" value="4" /> <label for="rating_34">4: Excellent - fully answers the question</label>
+
+<hr /> <input id="answer3" name="best_answer[]" type="checkbox" value="${src3}" /> <label for="answer3">This is the best answer</label></div>
+</div>
+</div>
+
+<div class="col l6 offset-l3">
+<div class="row" id="error_card" style="display:none"><!-- Error Card -->
+<div class="card-panel red lighten-1 white-text">
+<h5>Please Review The Following:</h5>
+
+<ul style="padding:0px 10px 0px 10px">
+    <li id="checked_ratings" style="display:none">-- You must choose a rating for each answer</li>
+    <li id="checked_best_question" style="display:none">-- You must check check at least one answer as a best answer</li>
+</ul>
+</div>
+</div>
+<input class="btn btn-primary disabled" id="submitButton" style="width:100%" type="submit" value="Submit" /></div>
+</div>
+</form>
+<script Language="Javascript">
+
+window.onload = function() {
+    if(document.getElementById('body').textContent == "MISSING"){
+       document.getElementById('body').style.display = "none";
+    }
+
+    if(document.getElementById('submitButton').value.toString() === "You must ACCEPT the HIT before you can submit the results."){
+      document.getElementById('instructions_done').classList.add("disabled");
+    } else {
+      document.getElementById('instructions_done').classList.remove("disabled");
+    }
+}
+
+
+$("#instructions_done").click(function(){
+  start =  new Date().getTime();
+  document.getElementById('instructions_done').style.display = "none";
+  document.getElementById('question_card').style.display = "block";
+
+  document.getElementById('timer').style.display = "block";
+  timer_start();
+});
+
+$("#question_done").click(function(){
+  middle = new Date().getTime();
+
+  document.getElementById('question_done').style.display = "none";
+  document.getElementById('answer_container').style.display = "block";
+
+  document.getElementById('submitButton').classList.remove("disabled");
+
+  var total_reading_time = (middle - start)/1000;
+  console.log(total_reading_time);
+  +document.getElementById("reading_time").setAttribute("value", total_reading_time);
+
+});
+
+$("#submitButton").click(function(){
+  end = new Date().getTime();
+
+  var formFilled = checkMissing(); //check if the form is completed
+
+  var total_answering_time = (end - middle)/1000;
+  console.log(total_answering_time);
+  +document.getElementById("answering_time").setAttribute("value", total_answering_time);
+
+  if(formFilled) return true;
+  return false;
+});
+
+function timer_start(){
+  var time = 60;
+  var interval = setInterval(function() {
+    time = time - 1;
+    document.getElementById('timer').innerHTML = "Time left: " + time + " sec";
+    switch (time) {
+      case 15: //50 seconds past
+        document.getElementById('timer').classList.remove("green");
+        document.getElementById('timer').classList.add("red");
+        break;
+      case 0: //60 seconds past
+        clearInterval(interval);
+        break;
+      default:
+        break;
+    }
+  }, 1000);
+}
+
+function checkMissing() {
+  var unfilled = 0;
+
+  // THIS IS BAD, ASSUMES THERE ARE 3 ELEMENTS!
+  if( checkFilled("best_answer[]") == 0 ){
+    document.getElementById('checked_best_question').style.display = "block";
+    unfilled++;
+  } else document.getElementById('checked_best_question').style.display = "none";
+
+
+  var rated = 0;
+  var names = ["rating_1", "rating_2", "rating_3"];
+  for (var i = 0; i < names.length; i++) {
+    rated += $('[name="' + names[i] + '"]').is(':checked');
+  }
+  if (rated < names.length) {
+    unfilled++;
+    document.getElementById('checked_ratings').style.display = "block";
+  } else {
+    document.getElementById('checked_ratings').style.display = "none";
+  }
+
+
+  if (unfilled > 0) {
+    document.getElementById("error_card").style.display = "block";
+    window.scrollTo(0,document.body.scrollHeight);
+    return false;
+  }
+  document.getElementById("error_card").style.display = "none";
+  return true;
+}
+
+function checkFilled(name){
+  var x = document.getElementsByName(name);
+  if(x[0].checked || x[1].checked || x[2].checked){
+    return 1;
+  } else return 0;
+}
+
+</script>

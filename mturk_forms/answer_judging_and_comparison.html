@@ -1,0 +1,172 @@
+pt src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css" rel="stylesheet" /><script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script><!-- Compiled and minified CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" rel="stylesheet" /><!-- Compiled and minified JavaScript --><script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+<style type="text/css">.question-answer-card.mdl-card {
+  width: 100%;
+}
+#toast-container {
+  position: fixed;
+  top: 80%;
+  left: -28%;
+}
+</style>
+<!--- INSTRUCTIONS --->
+<nav id="instruction_card" style="height:auto; padding:10px 0px 0px 40px"><!-- Instructions -->
+<h3>Instructions:</h3>
+
+<ol>
+    <li>Read the given question</li>
+    <li>Read each of the answers and assess its quality from 1 (bad) - 4 (excellent)</li>
+    <li>Select one or more (if equal quality) best answers to the given question</li>
+    <li>Briefly describe why the selected answers are better than the others</li>
+</ol>
+<small>It is possible to receive a question that is in poor taste or a question that does not make sense.</small></nav>
+<!--- QUESTION --->
+
+<div class="mdl-grid">
+<div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset">
+<div class="question-answer-card mdl-card mdl-shadow--2dp">
+<div class="mdl-card__supporting-text"><small>${category}</small></div>
+
+<div class="mdl-card__title">
+<h2 class="mdl-card__title-text">${title}</h2>
+</div>
+
+<div class="mdl-card__supporting-text mdl-card--border">${body}</div>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col l4">
+<div class="card-panel">
+<p>${answer1}</p>
+
+<hr />
+<p><input id="rating1_1" name="rating_1" required="" type="radio" value="1" /> <label for="rating1_1">1: Bad - contains no useful information</label><br />
+<input id="rating1_2" name="rating_1" type="radio" value="2" /> <label for="rating1_2">2: Fair - marginally useful information</label><br />
+<input id="rating1_3" name="rating_1" type="radio" value="3" /> <label for="rating1_3">3: Good - partially answers the question</label><br />
+<input id="rating1_4" name="rating_1" type="radio" value="4" /> <label for="rating1_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer1" name="best_answer[]" type="checkbox" value="${src1}" /> <label for="answer1">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer2}</p>
+
+<hr />
+<p><input id="rating2_1" name="rating_2" required="" type="radio" value="1" /> <label for="rating2_1">1: Bad - contains no useful information</label><br />
+<input id="rating2_2" name="rating_2" type="radio" value="2" /> <label for="rating2_2">2: Fair - marginally useful information</label><br />
+<input id="rating2_3" name="rating_2" type="radio" value="3" /> <label for="rating2_3">3: Good - partially answers the question</label><br />
+<input id="rating2_4" name="rating_2" type="radio" value="4" /> <label for="rating2_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer2" name="best_answer[]" type="checkbox" value="${src2}" /> <label for="answer2">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer7}</p>
+
+<hr />
+<p><input id="rating7_1" name="rating_7" required="" type="radio" value="1" /> <label for="rating7_1">1: Bad - contains no useful information</label><br />
+<input id="rating7_2" name="rating_7" type="radio" value="2" /> <label for="rating7_2">2: Fair - marginally useful information</label><br />
+<input id="rating7_3" name="rating_7" type="radio" value="3" /> <label for="rating7_3">3: Good - partially answers the question</label><br />
+<input id="rating7_4" name="rating_7" type="radio" value="4" /> <label for="rating7_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer7" name="best_answer[]" type="checkbox" value="${src7}" /> <label for="answer7">This is the best answer</label></div>
+</div>
+
+<div class="col l4">
+<div class="card-panel">
+<p>${answer3}</p>
+
+<hr />
+<p><input id="rating3_1" name="rating_3" required="" type="radio" value="1" /> <label for="rating3_1">1: Bad - contains no useful information</label><br />
+<input id="rating3_2" name="rating_3" type="radio" value="2" /> <label for="rating3_2">2: Fair - marginally useful information</label><br />
+<input id="rating3_3" name="rating_3" type="radio" value="3" /> <label for="rating3_3">3: Good - partially answers the question</label><br />
+<input id="rating3_4" name="rating_3" type="radio" value="4" /> <label for="rating3_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer3" name="best_answer[]" type="checkbox" value="${src3}" /> <label for="answer3">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer4}</p>
+
+<hr />
+<p><input id="rating4_1" name="rating_4" required="" type="radio" value="1" /> <label for="rating4_1">1: Bad - contains no useful information</label><br />
+<input id="rating4_2" name="rating_4" type="radio" value="2" /> <label for="rating4_2">2: Fair - marginally useful information</label><br />
+<input id="rating4_3" name="rating_4" type="radio" value="3" /> <label for="rating4_3">3: Good - partially answers the question</label><br />
+<input id="rating4_4" name="rating_4" type="radio" value="4" /> <label for="rating4_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer4" name="best_answer[]" type="checkbox" value="${src4}" /> <label for="answer4">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer8}</p>
+
+<hr />
+<p><input id="rating8_1" name="rating_8" required="" type="radio" value="1" /> <label for="rating8_1">1: Bad - contains no useful information</label><br />
+<input id="rating8_2" name="rating_8" type="radio" value="2" /> <label for="rating8_2">2: Fair - marginally useful information</label><br />
+<input id="rating8_3" name="rating_8" type="radio" value="3" /> <label for="rating8_3">3: Good - partially answers the question</label><br />
+<input id="rating8_4" name="rating_8" type="radio" value="4" /> <label for="rating8_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer8" name="best_answer[]" type="checkbox" value="${src8}" /> <label for="answer8">This is the best answer</label></div>
+</div>
+
+<div class="col l4">
+<div class="card-panel">
+<p>${answer5}</p>
+
+<hr />
+<p><input id="rating5_1" name="rating_5" required="" type="radio" value="1" /> <label for="rating5_1">1: Bad - contains no useful information</label><br />
+<input id="rating5_2" name="rating_5" type="radio" value="2" /> <label for="rating5_2">2: Fair - marginally useful information</label><br />
+<input id="rating5_3" name="rating_5" type="radio" value="3" /> <label for="rating5_3">3: Good - partially answers the question</label><br />
+<input id="rating5_4" name="rating_5" type="radio" value="4" /> <label for="rating5_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer5" name="best_answer[]" type="checkbox" value="${src5}" /> <label for="answer5">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer6}</p>
+
+<hr />
+<p><input id="rating6_1" name="rating_6" required="" type="radio" value="1" /> <label for="rating6_1">1: Bad - contains no useful information</label><br />
+<input id="rating6_2" name="rating_6" type="radio" value="2" /> <label for="rating6_2">2: Fair - marginally useful information</label><br />
+<input id="rating6_3" name="rating_6" type="radio" value="3" /> <label for="rating6_3">3: Good - partially answers the question</label><br />
+<input id="rating6_4" name="rating_6" type="radio" value="4" /> <label for="rating6_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer6" name="best_answer[]" type="checkbox" value="${src6}" /> <label for="answer6">This is the best answer</label></div>
+
+<div class="card-panel">
+<p>${answer9}</p>
+
+<hr />
+<p><input id="rating9_1" name="rating_9" required="" type="radio" value="1" /> <label for="rating9_1">1: Bad - contains no useful information</label><br />
+<input id="rating9_2" name="rating_9" type="radio" value="2" /> <label for="rating9_2">2: Fair - marginally useful information</label><br />
+<input id="rating9_3" name="rating_9" type="radio" value="3" /> <label for="rating9_3">3: Good - partially answers the question</label><br />
+<input id="rating9_4" name="rating_9" type="radio" value="4" /> <label for="rating9_4">4: Excellent - fully answers the question</label></p>
+
+<hr /><input id="answer9" name="best_answer[]" type="checkbox" value="${src9}" /> <label for="answer9">This is the best answer</label></div>
+</div>
+</div>
+
+<div class="mdl-grid">
+<div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset">
+<div class="input-field col s12"><textarea class="materialize-textarea" id="comment" name="comment" required="" style="padding-top:40; padding-left:40"></textarea><label for="comment">Why the marked answers are better than the other?</label></div>
+</div>
+</div>
+<script language="javascript">
+$(document).ready(function() {
+   $("#submitButton").click(function() {
+      if(!$('[name="rating_1"]').is(':checked') ||
+         !$('[name="rating_2"]').is(':checked') || 
+         !$('[name="rating_3"]').is(':checked') ||
+         !$('[name="rating_4"]').is(':checked') ||
+         !$('[name="rating_5"]').is(':checked') ||
+         !$('[name="rating_6"]').is(':checked') ||
+         !$('[name="rating_7"]').is(':checked') ||
+         !$('[name="rating_8"]').is(':checked') ||
+         !$('[name="rating_9"]').is(':checked')) {
+         Materialize.toast('Please rate all answers!', 4000);
+         return false;
+      }
+      return true;
+   })
+});
+</script>

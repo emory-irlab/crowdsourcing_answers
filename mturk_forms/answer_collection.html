@@ -1,0 +1,125 @@
+<!-- Bootstrap v3.0.3 -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<section class="container" id="Writing" style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">&nbsp;</section>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<div id="yahooAnswer" style="display:none">${answer}</div>
+
+<div class="row col-xs-12 col-md-12">
+<div>&nbsp;</div>
+
+<div class="panel panel-primary">
+<div class="panel-heading"><strong>Instructions</strong></div>
+<!-- Instructions -->
+
+<div class="panel-body">
+<ol>
+    <li><strong>You will be given a question generated from a real person on the internet</strong></li>
+    <li><strong>You will have 5 minutes to answer each question</strong></li>
+    <li><strong>If you don&#39;t know the answer yourself you are allowed to browse the internet</strong></li>
+    <li><strong>If you found the answer on the internet you must provide the source (otherwise write N/A for source)</strong></li>
+    <li><strong><font color="red">Use this link to search for an answer: <strong> <a href="https://www.google.com/webhp?tbs=cdr:1,cd_max:8/30/2015" onclick="linkClicked();" target="_blank">http://www.google.com</a></strong><br />
+    DO NOT OPEN ANOTHER SEARCH ENGINE</font></strong></li>
+</ol>
+
+<p>It is possible to receive a question that is in poor taste or a question that does not make sense. Please rate each question accordingly.</p>
+</div>
+</div>
+
+<div class="panel panel-primary">
+<div class="panel-heading"><strong>Question</strong></div>
+
+<div class="panel-body"><small>${category}</small>
+
+<h3>${title}</h3>
+<!-- Question -->
+
+<p id="body">${body}</p>
+</div>
+</div>
+
+<form id="mturk_form" method="post" name="mturk_form">
+<div>&nbsp;</div>
+<input id="cheated" name="cheated" type="hidden" value="0" /> <input id="clickedLink" name="clickedLink" type="hidden" value="false" />
+<div><label>Does the way the question is worded make sense?</label><br />
+<input name="makeSense" required="" style="margin: 0px 4px 0px 15px" type="radio" value="yes" />Yes <input name="makeSense" required="" style="margin: 0px 4px 0px 15px" type="radio" value="no" />No</div>
+&nbsp;
+
+<div><label>Are you familiar with this topic?</label><br />
+<input name="familiarity" required="" style="margin: 0px 4px 0px 15px" type="radio" value="yes" />Yes <input name="familiarity" required="" style="margin: 0px 4px 0px 15px" type="radio" value="no" />No</div>
+&nbsp;
+
+<div id="checkboxes"><label>What category does this question fall under? Please choose all that apply:</label>
+
+<div id="checkedWarning" style="display:none"><font color="red" size="3"><strong>You must check at least one category</strong></font></div>
+
+<div><input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="opinion" />Opinion (Seeking opinion of others)</div>
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="recommendation" />Recommendation (Seeking recommendation from others)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="conversational" />Conversational (the goal is to start a conversation, not to receive an answer)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="procedure" />Procedure: (seeking instructions on how to accomplish a task)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="yesno" />Yes/no (seeking a yes/no answer)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="degree" />Degree/extent (how much, how far, how famous, etc)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="definition" />Definition/Reference (what is something or someone)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="reason" />Reason (why is something...)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="manner" />Manner (how is something formed, how to...). Not necessarily actionable like Procedure.<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="time" />Time/interval (how long does something take)<br />
+<input name="category" style="margin: 0px 4px 0px 15px" type="checkbox" value="location" />Location (where is something)</div>
+&nbsp;
+
+<div><label>Write the answer below:</label><textarea class="form-control" cols="250" maxlength="1000" name="answer" placeholder="1000 character limit" required="" rows="3"></textarea></div>
+
+<div>&nbsp;</div>
+
+<div>&nbsp;</div>
+
+<div><label>Source:</label><input class="form-control" cols="250" maxlength="1000" name="source" placeholder="answer source" required="" /></div>
+
+<div>&nbsp;</div>
+
+<div>&nbsp;</div>
+<input class="btn btn-primary" id="submitButton" type="submit" value="Submit" />
+<div>&nbsp;</div>
+</form>
+</div>
+<script Language="Javascript">
+        window.onload = function() {
+            if(document.getElementById("body").textContent == "MISSING"){
+               document.getElementById("body").style.display = "none";
+            }
+            document.getElementById('submitButton').setAttribute('onclick', 'return validate()');
+        }
+
+        function validate(){
+            var yAnswer = document.getElementById("yahooAnswer").textContent.toLowerCase().replace(/\s+/g, '');
+            var answer = document.forms["mturk_form"]["answer"].value.toLowerCase().replace(/\s+/g, '');
+            if(!checked()) return false;
+            if( (answer == yAnswer) || ((yAnswer.indexOf(answer) != -1) && answer.length > 0)){
+                if( answer.length <= 40 && checked() ){
+                    return true;
+                }
+                var num = +document.getElementById("cheated").value;
+                +document.getElementById("cheated").setAttribute("value", num + 1);
+                return true;
+            }
+            document.getElementById("warningText").style.display = "none";
+            return true;
+        }
+
+        function checked(){
+            var count = 0;
+            for( i = 0; i< document.forms["mturk_form"]["category"].length; i++ ){
+                if(document.forms["mturk_form"]["category"][i].checked) count++;
+            }
+
+            if(count > 0){
+                document.getElementById("checkedWarning").style.display = "none";
+                return true;
+            }
+            document.getElementById("checkedWarning").style.display = "block";
+            return false;
+        }
+
+        function linkClicked(){
+            +document.getElementById("clickedLink").setAttribute("value", 1);
+        }
+
+</script>

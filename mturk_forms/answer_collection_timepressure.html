@@ -1,0 +1,243 @@
+pt src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script><!-- jquery -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" rel="stylesheet" /><script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+<div id="yahooAnswer" style="display:none">${answer}</div>
+<!--################################## Instruction Card ##################################################-->
+
+<nav class="blue" id="instruction_card" style="height:auto; padding:10px 20px 10px 40px"><!-- Instructions -->
+<h3>Instructions:</h3>
+
+<ol>
+    <li>You will be given a question generated from a real person on the internet</li>
+    <li>You will have 5 minutes to answer each question</li>
+    <li>If you don&#39;t know the answer yourself you are allowed to browse the internet</li>
+    <li>If you found the answer on the internet you must provide the source (otherwise write N/A for source)</li>
+    <li class="yellow-text">Use this specific link below to search for an answer, DO NOT OPEN ANOTHER SEARCH ENGINE: <a class="yellow lighten-2 blue-text btn" href="https://www.google.com/webhp?tbs=cdr:1,cd_max:8/30/2015" id="link" style="margin-left:20px" target="_blank"> www.Google.com </a></li>
+</ol>
+
+<p>It is possible to receive a question that is in poor taste or a question that does not make sense. Please rate each question accordingly.</p>
+<a class="btn waves-effect waves-light yellow lighten-2 blue-text" id="instructions_done" style="width:100%">Click here when you are ready to see the question</a></nav>
+
+<p><br id="break" />
+<!--################################## Question Card #########################################--></p>
+
+<div class="teal white-text card-panel" id="question_card" style="margin: 20px"><!-- Question Card -->
+<h3>Question: <a class="btn-large waves-effect waves-light green white-text" id="timer1" style="float:right; font-size:20px">60</a></h3>
+
+<div class="white black-text" style="padding:10px 40px 10px 40px">
+<h5><strong>${question}</strong></h5>
+
+<h6 id="body" style="padding-left:20px">${body}</h6>
+<a class="btn waves-effect waves-light yellow lighten-2 teal-text" id="question_done" style="width:100%">Click here when you are done reading</a></div>
+</div>
+<!--################################## Form ##################################################-->
+
+<form id="mturk_form" method="post" name="mturk_form"><!-- form begins -->
+<div class="container"><!-- container begins --><!-- hidden fields --><input id="cheated" name="cheated" type="hidden" value="false" /> <input id="missed_fields" name="missed_fields" type="hidden" value="0" /> <input id="clickedLink" name="clickedLink" type="hidden" value="false" /> <!-- Timing --> <input id="reading_time" name="reading_time" type="hidden" value="0" /> <input id="answering_time" name="answering_time" type="hidden" value="0" /> <!-- Time Intervals --> <input id="30seconds" name="30seconds" type="hidden" value="" /> <input id="40seconds" name="40seconds" type="hidden" value="" /> <input id="50seconds" name="50seconds" type="hidden" value="" /> <input id="60seconds" name="60seconds" type="hidden" value="" />
+<div class="row" id="makes_sense_card" style="margin-bottom:0px"><!-- "Makes Sense" Question -->
+<div class="card-panel">
+<h5 style="margin-bottom:4px">Does the way the question is worded make sense?</h5>
+<input class="checkedWarning" id="yes_makes_sense" name="makes_sense" required="" type="radio" value="yes" /> <label for="yes_makes_sense">yes</label><br />
+<input class="checkedWarning" id="no_makes_sense" name="makes_sense" required="" type="radio" value="no" /> <label for="no_makes_sense">no</label>
+
+<h5 style="margin-bottom:4px">Are you familiar with this topic?</h5>
+<input id="yes_familiar" name="familiar" required="" type="radio" value="yes" /> <label for="yes_familiar">yes</label><br />
+<input id="no_familiar" name="familiar" required="" type="radio" value="no" /> <label for="no_familiar">no</label></div>
+</div>
+
+<div class="row" id="answer_source_card" style="margin-top:0px"><!-- Answer and Source -->
+<div class="card-panel">
+<h5>Write Your Answer Below:</h5>
+<textarea class="materialize-textarea" id="worker_answer" name="answer" placeholder="1000 Character Limit" required="" style="overflow:auto; padding:5px"></textarea>
+
+<h5>Answer Source:</h5>
+<textarea class="materialize-textarea" id="source" name="source" placeholder="Answer Source" required="" style="padding:0px"></textarea></div>
+</div>
+
+<div class="row" id="error_card" style="display:none"><!-- Error Card -->
+<div class="card-panel red lighten-1 white-text">
+<h5>Please Review The Following:</h5>
+
+<ul style="padding:0px 10px 0px 10px">
+    <li id="checked_makes_sense" style="display:none">-- You must answer if the question makes sense</li>
+    <li id="checked_familiar" style="display:none">-- You must answer if you are familiar with the topic</li>
+    <li id="checked_category" style="display:none">-- You must choose at least one category</li>
+    <li id="filled_answer" style="display:none">-- You must provide an answer</li>
+    <li id="filled_source" style="display:none">-- You must provide a source for your answer</li>
+</ul>
+</div>
+</div>
+<!-- Submut Button -->
+
+<div class="btn green white-text" id="timer2" style="width:100%; font-size:20px">60</div>
+<br />
+<br id="hidden_break" />
+<input class="btn btn-primary disabled" id="submitButton" style="width:100%" type="submit" value="Submit" /></div>
+<!-- end of container --></form>
+<!-- form ends --><!--################################## Scripts ##################################################--><script Language=Javascript>
+
+var start = 0; //start time for reading time
+var middle = 0; //end time for reading time/start time for answering time
+var end = 0; //end time for answering time
+
+window.onload = function() {
+    if(document.getElementById('body').textContent == "MISSING"){
+       document.getElementById('body').style.display = "none";
+    }
+
+    if(document.getElementById('submitButton').value.toString() === "You must ACCEPT the HIT before you can submit the results."){
+      document.getElementById('instructions_done').classList.add("disabled");
+    } else {
+      document.getElementById('instructions_done').classList.remove("disabled");
+    }
+
+    document.getElementById('timer2').style.display = "none";
+    document.getElementById('hidden_break').style.display = "none";
+
+    document.getElementById('question_card').style.display = "none";
+    document.getElementById('instruction_card').style.display = "block";
+
+    document.getElementById('makes_sense_card').style.display = "none";
+
+    document.getElementById('answer_source_card').style.display = "none";
+}
+
+// timer
+function timer_start(){
+  var time = 60;
+  var interval = setInterval(function() {
+    time = time - 1;
+    document.getElementById('timer1').innerHTML = time;
+    document.getElementById('timer2').innerHTML = time;
+    switch (time) {
+      case 30: //30 seconds past
+        document.forms["mturk_form"]["30seconds"].value = document.forms["mturk_form"]["worker_answer"].value;
+        break;
+      case 20: //40 seconds past
+        document.forms["mturk_form"]["40seconds"].value = document.forms["mturk_form"]["worker_answer"].value;
+        break;
+      case 10: //50 seconds past
+        document.forms["mturk_form"]["50seconds"].value = document.forms["mturk_form"]["worker_answer"].value;
+        document.getElementById('timer1').classList.remove("green");
+        document.getElementById('timer1').classList.add("red");
+        document.getElementById('timer2').classList.remove("green");
+        document.getElementById('timer2').classList.add("red");
+        break;
+      case 0: //60 seconds past
+        clearInterval(interval);
+        document.forms["mturk_form"]["60seconds"].value = document.forms["mturk_form"]["worker_answer"].value;
+        break;
+      default:
+        break;
+    }
+  }, 1000);
+}
+
+
+
+function flagCheated() {
+  var yAnswer = document.getElementById("yahooAnswer").textContent.toLowerCase().replace(/\s+/g, '');
+  var answer = document.forms["mturk_form"]["worker_answer"].value.toLowerCase().replace(/\s+/g, '');
+  if( (answer == yAnswer) || (yAnswer.indexOf(answer) != -1) ){
+     if( answer.length > 40){
+        +document.getElementById("cheated").setAttribute("value", "true");
+     }
+  }
+}
+
+//####################### Click Handlers #########################
+
+// Click Handler: Instructions
+$("#instructions_done").click(function(){
+  start =  new Date().getTime();
+  document.getElementById('question_card').style.display = "block";
+  document.getElementById('instructions_done').style.display = "none";
+  document.getElementById('break').style.display = "none";
+});
+
+// Click Handler: Search Link
+$("#link").click(function(){
+    +document.getElementById("clickedLink").setAttribute("value", "true");
+});
+
+// Click Handler: Done reading Question
+$("#question_done").click(function(){
+  document.getElementById('timer2').style.display = "block";
+  document.getElementById('hidden_break').style.display = "block";
+
+  timer_start();
+  middle = new Date().getTime();
+
+  document.getElementById('makes_sense_card').style.display = "block";
+  document.getElementById('answer_source_card').style.display = "block";
+
+  document.getElementById('question_done').style.display = "none";
+
+  document.getElementById('submitButton').classList.remove("disabled");
+
+  var total_reading_time = (middle - start)/1000;
+  +document.getElementById("reading_time").setAttribute("value", total_reading_time);
+
+});
+
+// Click Handler: Submit Button
+$("#submitButton").click(function(){
+  end = new Date().getTime();
+
+  var formFilled = checkMissing(); //check if the form is completed
+  flagCheated();
+
+  var total_answering_time = (end - middle)/1000;
+  +document.getElementById("answering_time").setAttribute("value", total_answering_time);
+
+  if(formFilled) return true;
+  return false;
+});
+
+// Click Handler: Form Validation
+function checkMissing() {
+  var unfilled = 0;
+
+  //-----Checking if makes sense is checked
+  if(!(document.getElementById('yes_makes_sense').checked || document.getElementById('no_makes_sense').checked)){
+    document.getElementById('checked_makes_sense').style.display = "block";
+    unfilled++;
+  } else document.getElementById('checked_makes_sense').style.display = "none";
+
+
+  //-----Checking if familiarity is checked
+  if(!(document.getElementById('yes_familiar').checked || document.getElementById('no_familiar').checked)){
+    document.getElementById('checked_familiar').style.display = "block";
+    unfilled++;
+  } else document.getElementById('checked_familiar').style.display = "none";
+
+
+  //-----Checking if answer is filled
+  if(document.getElementById("worker_answer").value.length == 0){
+    document.getElementById('filled_answer').style.display = "block";
+    unfilled++;
+  } else document.getElementById('filled_answer').style.display = "none";
+
+
+  //-----Checking if source is filled
+  if(document.getElementById("source").value.length == 0){
+    document.getElementById('filled_source').style.display = "block";
+    unfilled++;
+  } else document.getElementById('filled_source').style.display = "none";
+
+
+  //-----checking if there are unfilled fields
+  if (unfilled > 0) {
+    document.getElementById("error_card").style.display = "block";
+    window.scrollTo(0,document.body.scrollHeight);
+    var clicked_unfilled = Number(document.getElementById("missed_fields").value) + 1;
+    +document.getElementById("missed_fields").setAttribute("value", clicked_unfilled);
+    return false;
+  }
+  document.getElementById("error_card").style.display = "none";
+  return true;
+}
+
+</script>
