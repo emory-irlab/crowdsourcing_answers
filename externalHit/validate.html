@@ -12,8 +12,6 @@
   </h5>
 </nav>
 
-
-
   <div class="row" style="padding-top:3%">
     <div class="col s12 m12 l12">
 
@@ -30,60 +28,127 @@
   </div>
 
   <div class="row">
-
     <!--will have to change action to communicate with backend-->
     <form id="mturk_form" name="mturk_form" method="post" action="./validate.html"> <!-- form begins -->
 
-
       <div class="row">
-      <div id="answer_container"><input id="reading_time" name="reading_time" type="hidden" value="0" /> <input id="answering_time" name="answering_time" type="hidden" value="0" />
-      <div class="col l4">
-      <div class="card-panel">
-      <p>${answer}</p>
 
-      <hr /><input id="rating_11" name="rating_1" required="" type="radio" value="1" /> <label for="rating_11">1: Bad - contains no useful information</label><br />
-      <input id="rating_12" name="rating_1" required="" type="radio" value="2" /> <label for="rating_12">2: Fair - marginally useful information</label><br />
-      <input id="rating_13" name="rating_1" required="" type="radio" value="3" /> <label for="rating_13">3: Good - partially answers the question</label><br />
-      <input id="rating_14" name="rating_1" required="" type="radio" value="4" /> <label for="rating_14">4: Excellent - fully answers the question</label>
+        <div id="answer_container"><input id="reading_time" name="reading_time" type="hidden" value="0" /> <input id="answering_time" name="answering_time" type="hidden" value="0" />
 
-      <hr /> <input id="answer1" name="best_answer[]" type="checkbox" value="${src1}" /> <label for="answer1">This is the best answer</label></div>
+          <div class="col l4">
+            <div class="card-panel">
+              <p>${answer}</p>
+                <hr />
+                <input id="rating_11" name="rating_1" required="" type="radio" value="1" /> <label for="rating_11">1: Bad - contains no useful information</label><br />
+                <input id="rating_12" name="rating_1" required="" type="radio" value="2" /> <label for="rating_12">2: Fair - marginally useful information</label><br />
+                <input id="rating_13" name="rating_1" required="" type="radio" value="3" /> <label for="rating_13">3: Good - partially answers the question</label><br />
+                <input id="rating_14" name="rating_1" required="" type="radio" value="4" /> <label for="rating_14">4: Excellent - fully answers the question</label>
+                <hr />
+                <input id="answer1" name="best_answer[]" type="checkbox" value="${src1}" /> <label for="answer1">This is the best answer</label>
+            </div>
+          </div>
+
+
+          <div class="col l4">
+            <div class="card-panel">
+              <p>${answer}</p>
+                <hr />
+                <input id="rating_21" name="rating_2" required="" type="radio" value="1" /> <label for="rating_21">1: Bad - contains no useful information</label><br />
+                <input id="rating_22" name="rating_2" required="" type="radio" value="2" /> <label for="rating_22">2: Fair - marginally useful information</label><br />
+                <input id="rating_23" name="rating_2" required="" type="radio" value="3" /> <label for="rating_23">3: Good - partially answers the question</label><br />
+                <input id="rating_24" name="rating_2" required="" type="radio" value="4" /> <label for="rating_24">4: Excellent - fully answers the question</label>
+                <hr />
+                <input id="answer2" name="best_answer[]" type="checkbox" value="${src2}" /> <label for="answer2">This is the best answer</label>
+            </div>
+          </div>
+
+          <div class="col l4">
+            <div class="card-panel">
+              <p>${answer}</p>
+                <hr />
+                <input id="rating_31" name="rating_3" required="" type="radio" value="1" /> <label for="rating_31">1: Bad - contains no useful information</label><br />
+                <input id="rating_32" name="rating_3" required="" type="radio" value="2" /> <label for="rating_32">2: Fair - marginally useful information</label><br />
+                <input id="rating_33" name="rating_3" required="" type="radio" value="3" /> <label for="rating_33">3: Good - partially answers the question</label><br />
+                <input id="rating_34" name="rating_3" required="" type="radio" value="4" /> <label for="rating_34">4: Excellent - fully answers the question</label>
+                <hr />
+                <input id="answer3" name="best_answer[]" type="checkbox" value="${src3}" /> <label for="answer3">This is the best answer</label>
+            </div>
+          </div>
+
+
+        </div>
       </div>
 
-      <div class="col l4">
-      <div class="card-panel">
-        <p>
-          ${answer}
-        </p>
-      <hr /><input id="rating_21" name="rating_2" required="" type="radio" value="1" /> <label for="rating_21">1: Bad - contains no useful information</label><br />
-      <input id="rating_22" name="rating_2" required="" type="radio" value="2" /> <label for="rating_22">2: Fair - marginally useful information</label><br />
-      <input id="rating_23" name="rating_2" required="" type="radio" value="3" /> <label for="rating_23">3: Good - partially answers the question</label><br />
-      <input id="rating_24" name="rating_2" required="" type="radio" value="4" /> <label for="rating_24">4: Excellent - fully answers the question</label>
-
-      <hr /> <input id="answer2" name="best_answer[]" type="checkbox" value="${src2}" /> <label for="answer2">This is the best answer</label></div>
+      <div class="row" id="error_card" style="display:none"><!-- Error Card -->
+        <div class="card-panel red lighten-1 white-text col s10 offset-s1">
+          <h5>Please Review The Following:</h5>
+          <ul style="padding:0px 10px 0px 10px">
+            <li id="checked_ratings" style="display:none">-- You must choose a rating for each answer</li>
+            <li id="checked_best_question" style="display:none">-- You must check check at least one answer as a best answer</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="col l4">
-      <div class="card-panel">
-      <p>${answer}</p>
-
-      <hr /><input id="rating_31" name="rating_3" required="" type="radio" value="1" /> <label for="rating_31">1: Bad - contains no useful information</label><br />
-      <input id="rating_32" name="rating_3" required="" type="radio" value="2" /> <label for="rating_32">2: Fair - marginally useful information</label><br />
-      <input id="rating_33" name="rating_3" required="" type="radio" value="3" /> <label for="rating_33">3: Good - partially answers the question</label><br />
-      <input id="rating_34" name="rating_3" required="" type="radio" value="4" /> <label for="rating_34">4: Excellent - fully answers the question</label>
-
-      <hr /> <input id="answer3" name="best_answer[]" type="checkbox" value="${src3}" /> <label for="answer3">This is the best answer</label></div>
-      </div>
-      </div>
-
-      <ul style="padding:0px 10px 0px 10px">
-        <li id="checked_ratings" style="display:none">-- You must choose a rating for each answer</li>
-        <li id="checked_best_question" style="display:none">-- You must check check at least one answer as a best answer</li>
-      </ul>
-
-      </div>
-      </div>
-      <input class="btn btn-primary" id="submitButton" style="width:100%" type="submit" value="Submit" /></div>
-      </div>
+      <input type="submit" id="submitButton" class="btn btn-primary col s10 offset-s1" value="Submit" >
 
     </form> <!-- form ends -->
   </div>
+
+  <script Language="Javascript">
+
+  window.onload = function() {
+      if(document.getElementById('body').textContent == "MISSING"){
+         document.getElementById('body').style.display = "none";
+      }
+  }
+
+  $("#submitButton").click(function(){
+    var formFilled = checkMissing(); //check if the form is completed
+    if(formFilled) return true;
+    return false;
+  });
+
+
+
+  function checkMissing() {
+    var unfilled = 0;
+
+    // THIS IS BAD, ASSUMES THERE ARE 3 ELEMENTS!
+    if( checkFilled("best_answer[]") == 0 ){
+      document.getElementById('checked_best_question').style.display = "block";
+      unfilled++;
+    } else document.getElementById('checked_best_question').style.display = "none";
+
+
+    var rated = 0;
+    var names = ["rating_1", "rating_2", "rating_3"];
+    for (var i = 0; i < names.length; i++) {
+      rated += $('[name="' + names[i] + '"]').is(':checked');
+    }
+    if (rated < names.length) {
+      unfilled++;
+      document.getElementById('checked_ratings').style.display = "block";
+    } else {
+      document.getElementById('checked_ratings').style.display = "none";
+    }
+
+
+    if (unfilled > 0) {
+      document.getElementById("error_card").style.display = "block";
+      window.scrollTo(0,document.body.scrollHeight);
+      return false;
+    }
+    document.getElementById("error_card").style.display = "none";
+    return true;
+  }
+
+  function checkFilled(name){
+    var x = document.getElementsByName(name);
+    if(x[0].checked || x[1].checked || x[2].checked){
+      return 1;
+    } else return 0;
+  }
+
+
+
+  </script>
