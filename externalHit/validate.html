@@ -6,10 +6,13 @@
 <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
 
-<nav id="instruction_card" class="blue" style="height:auto; padding:10px 20px 10px 40px"> <!-- Instructions -->
-  <h5 style="text-align:center">
-    Please answer the question once it arrives
-  </h5>
+<nav id="instruction_card" class="blue" style="height:auto; padding: 1% 0% 0% 1%"> <!-- Instructions -->
+  <div class="row">
+    <a class="col s1 m1 l1 teal white-text btn" style="align:left" href="./index.html" >home</a>
+    <h5 class="col s11 m11 l11 center">
+      { SPECIFIC INSTRUCTIONS }
+    </h5>
+  </div>
 </nav>
 
   <div class="row" style="padding-top:3%">
@@ -28,6 +31,7 @@
   </div>
 
   <div class="row">
+
     <!--will have to change action to communicate with backend-->
     <form id="mturk_form" name="mturk_form" method="post" action="./validate.html"> <!-- form begins -->
 
