@@ -188,7 +188,8 @@
 				hitId = getURLParameter('hitId');
 				turkSubmitTo = decodeURIComponent(getURLParameter('turkSubmitTo'));
 				$("#formAssignmentId").val(assignmentId);
-				$('#hitForm').get(0).setAttribute('action', turkSubmitTo + "mturk/externalSubmit");
+				console.log(turkSubmitTo);
+				$('#hitForm').get(0).setAttribute('action', turkSubmitTo + "/mturk/externalSubmit");
 
 				// Get the current question, so we don't waste the time.
 				getQuestion();
