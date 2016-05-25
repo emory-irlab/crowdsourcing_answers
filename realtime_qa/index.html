@@ -154,7 +154,7 @@
 
 	<script language="javascript">
 		//var apiUrl = "http://127.0.0.1:8080";
-        var apiUrl = "https://carbonite.mathcs.emory.edu:8081/";
+        var apiUrl = "https://carbonite.mathcs.emory.edu:8081";
 
 		var currentQid = "";
 		var workerId = "";
@@ -177,7 +177,7 @@
 		$(document).ready(function(){
 			assignmentId = getURLParameter('assignmentId');
 
-			if (assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
+			if (assignmentId == null || assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
 				showPreviewPage();
 			} else {
 				$("#workPage").show();
