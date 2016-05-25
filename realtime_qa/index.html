@@ -186,7 +186,7 @@
     			// Get mturk parameters from the url arguments.
 				workerId = getURLParameter('workerId');
 				hitId = getURLParameter('hitId');
-				turkSubmitTo = getURLParameter('turkSubmitTo');
+				turkSubmitTo = decodeURIComponent(getURLParameter('turkSubmitTo'));
 				$("#formAssignmentId").val(assignmentId);
 				$('#hitForm').get(0).setAttribute('action', turkSubmitTo + "mturk/externalSubmit");
 
