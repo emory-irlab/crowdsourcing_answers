@@ -9,6 +9,13 @@
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+      <style>
+      	ul.browser-default li {
+ 			list-style-type: initial;
+		}
+      </style>
+
     </head>
 
     <body>
@@ -17,45 +24,89 @@
 	  <!-- Compiled and minified JavaScript -->
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 
+	  <!-- Modal Structure -->
+	  <div id="instructions_modal" class="modal">
+	    <div class="modal-content">
+	      <h4><i class="material-icons">info</i>Instructions</h4>
+		  <ol>
+		  	<li>You will be given some questions, that came from real users on the internet.</li>
+		  	<li>Each question have a 1 minute time limit.</li>
+		  	<li>If you think you can answer the question, type it in the corresponding box.</li>
+		  	<li>At some point within a minute potential answers might appear. You will need to judge their quality on a scale from 1 - 4
+		  		<ul>
+		  			<li>1 - Bad</li>
+		  			<li>2 - Fair</li>
+		  			<li>3 - Good</li>
+		  			<li>4 - Excellent</li>
+		  		</ul>
+		  	</li>
+		  	<li><strong>DO NOT REFRESH THE PAGE!</strong></li>
+		  </ol>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+	    </div>
+	  </div>
+
+	 <div id="workPage" style="display:none">
+
+	  <div class="navbar-fixed">
+		  <nav>
+		    <div class="nav-wrapper">
+<!-- 		      <a href="#" class="brand-logo right">Question Answering</a> -->
+		      <ul id="nav-left" class="left hide-on-med-and-down">
+		          <li><a class="btn modal-trigger" data-target="instructions_modal">Instructions</a></li>
+		          <li id="timer_icon"><i class="large material-icons">av_timer</i></li>
+		          <li id="timer" style="font-size: 20pt; font-color: red">Question time: 1:00</li>
+		      </ul>
+		      <ul id="nav-right" class="right hide-on-med-and-down">
+		          <li><a class="btn" id="hit_timer">HIT time: 15:00</a></li>
+		      </ul>
+		    </div>
+		  </nav>
+	  </div>
+
+	        
+
       <div class="container">
 	    <div class="row">
-	      <div class="col s12">
-            <ul class="collapsible popout">
-			   <li>
-			      <div class="collapsible-header active"><i class="material-icons">info</i><strong>Instructions</strong></div>
-			      <div class="collapsible-body">
-			      	<ol class="collection">
-			      		<li class="collection-item">You will be given some questions, that came from real users on the internet.</li>
-			      		<li class="collection-item">Each question have a 1 minute time limit.</li>
-			      		<li class="collection-item">If you think you can answer the question, type it in the corresponding box.</li>
-			      		<li class="collection-item">At some point within a minute potential answers might appear. You will need to judge their quality on a scale from 1 - 4
-			      			<ul>
-			      				<li>1 - Bad</li>
-			      				<li>2 - Fair</li>
-			      				<li>3 - Good</li>
-			      				<li>4 - Excellent</li>
-			      			</ul>
-			      		</li>
-			      	</ol>
-			      </div>
-			   </li>
-			</ul>
-	      </div>
-	    </div>
-
-	    <div class="row">
-	      <div class="col s4">
+	      <div class="col s8 offset-s2">
 	      	<div class="card">
 	            <div class="card-content">
-	              <span class="card-title">Question</span>
-	              <hr />
-	              <small id="category">category</small>
-	              <h5 id="question_title">What should I do?</h5>
-	              <p id="question_body">Everything is good.</p>
+	              <span class="badge left" id="category">category</span>
+	              <div id="question" style="display:none">
+		              <div class="card-title" id="question_title">question_title</div>
+		              <p id="question_body">question_body</p>
+		              <br />
+		              <hr />
+		              <button class="btn waves-effect waves-light" id="can_answer" onclick='$("#can_answer").hide(); $("#answer_box").show();'>I can answer this question</button>
+		              <div class="input-field" id="answer_box" style="display:none">
+			              <i class="material-icons prefix">mode_edit</i>
+			              <textarea id="worker_answer" class="materialize-textarea" length="1000"></textarea>
+	          			  <label for="worker_answer">If you can provide a good response, please type it here...</label>
+	          			  <button class="btn waves-effect waves-light" type="submit" name="action" onclick="submitAnswer(); $('#answer_box').hide(); $('#thank_you_answer').show();">Submit
+	          			  	<i class="material-icons right">send</i>
+	          			  </button>
+          			  </div>
+          			  <div id="thank_you_answer" style="display:none">Your answer is recorder, thank you! Now, please rate the answers below...</div>
+	              </div>
+	              <div id="no_question">
+	              	<div class="card-title">Currently, there are no pending questions. Please wait...</div>
+					 <div class="progress">
+					      <div class="indeterminate"></div>
+					  </div>
+	              </div>
 	            </div>
 	          </div>
 	      </div>
-	      <div class="col s8"><iframe src="http://www.bing.com/search?q=what+is+life" width="100%" height="400"></iframe></div>
+	    </div>
+
+	    <div class="row" id="answers">
+	    	<div class="col s12" id="no_answers_yet">
+	    		<div class="card-panel">
+	    			Please wait, the answers are coming...
+	    		</div>
+	    	</div>
 	    </div>
 
       </div>
@@ -66,46 +117,250 @@
             </div>
           </div>
         </footer>
+     </div>
 
-    	<script language="javascript">
-    		var currentQid = "";
-    		var workerId = "";
-    		var assignmentId = "";
-    		var turkSubmitTo = "";
-    		var hitId = "";
-    		$(document).ready(function(){
-				setInterval(getQuestion, 1000);
+     <div id="previewPage" style="display:none">
+      <div class="container">
+	    <div class="row">
+	      <div class="col s12">
+	      	<div class="card">
+	            <div class="card-content">
+		            <div class="card-title"><h1>Instructions</h1></div>
+		            <div>
+			            <ol class="browser-default" style="font-size: 16pt">
+			            	<li>This HIT will last <strong>exactly 15 minutes</strong></li>
+			            	<li>Your HIT will only be submitted after these 15 minutes</li>
+			            	<li>In this period of time you will receive some questions, that came from real users on the Internet</li>
+			            	<li>Each question has a <strong>time limit</strong> after which it will disappear and you will need to want for the next one</li>
+			            	<li>If you know the answer to the question, please type it in the corresponding box</li>
+			            	<li>At some point several candidate answers will appear at the bottom of the page</li>
+			            	<li>Please rate them on a scale from 1 (bad) to 4 (excellent)</li>
+			            	<li>Do not close the browser or reload the page as this will reset your assignment.</li>
+			            </ol>
+		            </div>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+	  </div>
+     </div>
+
+     <form id="hitForm" method="POST">
+     	<input type="hidden" id="formAssignmentId" name="assignmentId" value="" />
+     	<input type="hidden" id="formAnswersProvided" name="answersProvided" value="0" />
+     	<input type="hidden" id="formAnswersRated" name="answersRated" value="0" />
+     	<input type="hidden" id="formQuestionsReceived" name="questionsReceived" value="0" />
+     </form>
+
+	<script language="javascript">
+		var apiUrl = "http://127.0.0.1:8080";
+
+		var currentQid = "";
+		var workerId = "";
+		var assignmentId = "";
+		var turkSubmitTo = "";
+		var hitId = "";
+
+		var questionsReceived = 0;
+		var answersProvided = 0;
+		var answersRated = 0;
+
+		var timer;
+		var hitTimer;
+		var timerTime = 0;
+		var hitTimeLeft = 15 * 60;
+		var checkAnswersTimer;
+
+		var answers = [];
+
+		$(document).ready(function(){
+			assignmentId = getURLParameter('assignmentId');
+
+			if (assignmentId == "ASSIGNMENT_ID_NOT_AVAILABLE") {
+				showPreviewPage();
+			} else {
+				$("#workPage").show();
+    			$('.modal-trigger').leanModal();
+
+    			// Get mturk parameters from the url arguments.
 				workerId = getURLParameter('workerId');
 				hitId = getURLParameter('hitId');
-				assignmentId = getURLParameter('assignmentId');
 				turkSubmitTo = getURLParameter('turkSubmitTo');
+				$("#formAssignmentId").val(assignmentId);
+				$('#hitForm').get(0).setAttribute('action', turkSubmitTo + "mturk/externalSubmit");
+
+				// Get the current question, so we don't waste the time.
+				getQuestion();
+
+				// Open instructions modal dialog.
+    			$('#instructions_modal').openModal();
+
+    			setTimeout(submitHit, hitTimeLeft * 1000);
+    			hitTimer = setInterval(updateHitTimer, 1000);
+			}
+
+		});
+
+		function getURLParameter(sParam) {
+			var sPageURL = window.location.search.substring(1);
+			var sURLVariables = sPageURL.split('&');
+			for (var i = 0; i < sURLVariables.length; i++) {
+				var sParameterName = sURLVariables[i].split('=');
+				if (sParameterName[0] == sParam) {
+					return sParameterName[1];
+				}
+			}
+		}
+
+		function getQuestion() {
+			$.getJSON(apiUrl + "/question", function(data) {
+			  console.log("success");
+			  currentQid = data["qid"];
+			  $("#category").text(data["category"]);
+			  $("#question_title").text(data["title"]);
+			  $("#question_body").text(data["body"]);
+			  // Get the time left.
+			  timerTime = data["timeLeft"] - 10;
+			  setTimeout(hideQuestion, timerTime * 1000);
+			  answers = [];
+			  showQuestion();
+			  questionsReceived += 1;
+			  $("#formQuestionsReceived").val(questionsReceived);
+
+			  // $( "<ul/>", {
+			  //   "class": "my-new-list",
+			  //   html: items.join( "" )
+			  // }).appendTo( "body" );
+
+			}).fail(function() {
+				hideQuestion();
+				console.log("error");
 			})
+		}
 
-			function getURLParameter(sParam) {
-    			var sPageURL = window.location.search.substring(1);
-    			var sURLVariables = sPageURL.split('&');
-    			for (var i = 0; i < sURLVariables.length; i++) {
-    				var sParameterName = sURLVariables[i].split('=');
-    				if (sParameterName[0] == sParam) {
-    					return sParameterName[1];
-    				}
-    			}
+		function showQuestion() {
+			$("#question").show();
+			$("#no_question").hide();
+			$("#timer_icon").show();
+			$("#no_answers_yet").show();
+			$("#thank_you_answer").hide();
+			$("#answer_box").hide();
+			$("#can_answer").show();
+			$("#category").show();
+			$("#answers").show();
+
+			clearInterval(timer);
+			timer = setInterval(updateQuestionTimer, 1000);
+
+			// Check for answers.
+			checkAnswersTimer = setTimeout(getAnswers, 1000);
+		}
+
+		function hideQuestion() {
+			$("#question").hide();
+			$("#no_question").show();
+			$("#timer_icon").hide();
+			$("#timer").text("");
+			$("#worker_answer").val("");
+			$("#category").hide();
+			$("#answers").html(`<div class="col s12" id="no_answers_yet"><div class="card-panel">Please wait, the answers are coming...</div></div>`);
+			$("#answers").hide();
+			timerTime = 60;
+			clearInterval(timer);
+
+			// Check for new questions in a second.
+			setTimeout(getQuestion, 1000);
+		}
+
+		function updateQuestionTimer() {
+			timerTime--;
+			var mins = Math.floor(timerTime / 60);
+			var secs = timerTime % 60;
+			$("#timer").text("Question time: " + ('0' + mins).slice(-2) + ":" + ('0' + secs).slice(-2));
+		}
+
+		function updateHitTimer() {
+			hitTimeLeft--;
+			var mins = Math.floor(hitTimeLeft / 60);
+			var secs = hitTimeLeft % 60;
+			$("#hit_timer").text("HIT time: " + ('0' + mins).slice(-2) + ":" + ('0' + secs).slice(-2));
+		}
+
+		function rateAnswer(index, score) {
+			console.log({ aid: $("#answer_id_" + index).val(), worker: workerId, rating: score});
+			$.get(apiUrl + "/rate_answer", { aid: $("#answer_id_" + index).val(), worker: workerId, rating: score});
+			$("#answer_" + index).remove();
+			answersRated += 1;
+			$("#formAnswersRated").val(answersRated);
+		}
+
+		function showPreviewPage() {
+			$("#previewPage").show();
+		}
+
+		function submitHit() {
+			console.log("Submitting the form");
+			$("#hitForm").submit();
+		}
+
+		function submitAnswer() {
+			console.log({ qid: currentQid, answer: $("#worker_answer").val()});
+			$.get(apiUrl + "/worker_answer", { qid: currentQid, answer: $("#worker_answer").val(), worker: workerId});
+			answersProvided += 1;
+			$("#formAnswersProvided").val(answersProvided);
+		}
+
+		function getAnswers() {
+			console.log("Requesting answers for the question ...");
+			$.getJSON(apiUrl + "/get_answers", { qid: currentQid, worker: workerId }, function(data) {
+			  console.log("success");
+			  if (data.length > 0) {
+			    addAnswersToRate(data);
+			  }
+			}).fail(function() {
+				console.log("failed getting answers");
+			});
+			checkAnswersTimer = setTimeout(getAnswers, 1000);
+		}
+
+		function addAnswersToRate(data) {
+			console.log(data);
+			$("#no_answers_yet").hide();
+			var answersCount = data.length;
+			for (var i = 0; i < answersCount; i++) {
+			  var aid = data[i]["id"];
+			  if (answers.indexOf(aid) < 0) {
+				  answers.push(aid);
+				  var answer = data[i]["answer"];
+			      var answerHtmlBlock = `
+				      <div class="col s4 answer-card animated" id="answer_${i}">
+				        <input type="hidden" name="answer_id_${i}" id="answer_id_${i}" value="${aid}" />
+			            <div class="card-panel">
+			              <p>${answer}</p>
+			                <hr />
+			                <input id="rating_${i}1" name="rating_${i}" required="" type="radio" value="1" /> <label for="rating_${i}1">1: Bad - contains no useful information</label><br />
+			                <input id="rating_${i}2" name="rating_${i}" required="" type="radio" value="2" /> <label for="rating_${i}2">2: Fair - marginally useful information</label><br />
+			                <input id="rating_${i}3" name="rating_${i}" required="" type="radio" value="3" /> <label for="rating_${i}3">3: Good - partially answers the question</label><br />
+			                <input id="rating_${i}4" name="rating_${i}" required="" type="radio" value="4" /> <label for="rating_${i}4">4: Excellent - fully answers the question</label>
+			            </div>
+				      </div>`;
+					$("#answers").append(answerHtmlBlock);
+
+					// Add onchange event handler to sent ratings to the server.
+					$("input[type=radio][name=rating_" + i + "]").change(function() {
+					    rateAnswer($(this).attr('name').split("_")[1], $(this).val());
+					    if ($("input[type=radio]").length == 0) {
+					    	$("#no_answers_yet").show();
+					    }
+					    console.log($(".answer-card").length);
+					    console.log($(".answer-card"));
+					    $(".answer-card").slice(0, 3).show();
+					});
+				}
 			}
 
-			function getQuestion() {
-				$.getJSON("http://127.0.0.1:8080/question", function(data) {
-				  currentQid = data["qid"];
-				  $("#category").text(data["category"]);
-				  $("#question_title").text(data["title"]);
-				  $("#question_body").text(data["body"]);
-				 
-				  // $( "<ul/>", {
-				  //   "class": "my-new-list",
-				  //   html: items.join( "" )
-				  // }).appendTo( "body" );
-				});
-			}
-
-    	</script>
+			$(".answer-card").slice(3).hide();
+		}
+	</script>
     </body>
   </html>
