@@ -153,8 +153,8 @@
      </form>
 
 	<script language="javascript">
-		//var apiUrl = "http://127.0.0.1:8080";
-        var apiUrl = "https://carbonite.mathcs.emory.edu:8081";
+		//var apiUrl = "http://127.0.0.1:8082";
+		var apiUrl = "https://carbonite.mathcs.emory.edu:8082";
 
 		var currentQid = "";
 		var workerId = "";
@@ -186,9 +186,12 @@
     			// Get mturk parameters from the url arguments.
 				workerId = getURLParameter('workerId');
 				hitId = getURLParameter('hitId');
+
+				// Add the current task to the database.
+				$.get(apiUrl + "/add_task", { workerId: workerId, assignmentId: assignmentId, hitId: hitId});
+
 				turkSubmitTo = decodeURIComponent(getURLParameter('turkSubmitTo'));
 				$("#formAssignmentId").val(assignmentId);
-				console.log(turkSubmitTo);
 				$('#hitForm').get(0).setAttribute('action', turkSubmitTo + "/mturk/externalSubmit");
 
 				// Get the current question, so we don't waste the time.
@@ -265,7 +268,7 @@
 			$("#timer").text("");
 			$("#worker_answer").val("");
 			$("#category").hide();
-			$("#answers").html(`<div class="col s12" id="no_answers_yet"><div class="card-panel">Please wait, the answers are coming...</div></div>`);
+			$("#answers").html('<div class="col s12" id="no_answers_yet"><div class="card-panel">Please wait, the answers are coming...</div></div>');
 			$("#answers").hide();
 			timerTime = 60;
 			clearInterval(timer);
@@ -301,6 +304,7 @@
 		}
 
 		function submitHit() {
+			$.get(apiUrl + "/finish_task", { assignmentId: assignmentId});
 			console.log("Submitting the form");
 			$("#hitForm").submit();
 		}
@@ -334,18 +338,18 @@
 			  if (answers.indexOf(aid) < 0) {
 				  answers.push(aid);
 				  var answer = data[i]["answer"];
-			      var answerHtmlBlock = `
-				      <div class="col s4 answer-card animated" id="answer_${i}">
-				        <input type="hidden" name="answer_id_${i}" id="answer_id_${i}" value="${aid}" />
-			            <div class="card-panel">
-			              <p>${answer}</p>
-			                <hr />
-			                <input id="rating_${i}1" name="rating_${i}" required="" type="radio" value="1" /> <label for="rating_${i}1">1: Bad - contains no useful information</label><br />
-			                <input id="rating_${i}2" name="rating_${i}" required="" type="radio" value="2" /> <label for="rating_${i}2">2: Fair - marginally useful information</label><br />
-			                <input id="rating_${i}3" name="rating_${i}" required="" type="radio" value="3" /> <label for="rating_${i}3">3: Good - partially answers the question</label><br />
-			                <input id="rating_${i}4" name="rating_${i}" required="" type="radio" value="4" /> <label for="rating_${i}4">4: Excellent - fully answers the question</label>
-			            </div>
-				      </div>`;
+			      var answerHtmlBlock = 
+				      '<div class="col s4 answer-card animated" id="answer_' + i + '">' +
+				        '<input type="hidden" name="answer_id_' + i + '" id="answer_id_' + i + '" value="' + aid + '" />' +
+			            '<div class="card-panel">' +
+			              '<p>' + answer + '</p>' +
+			                '<hr />' +
+			                '<input id="rating_' + i + '1" name="rating_' + i + '" required="" type="radio" value="1" /> <label for="rating_' + i + '1">1: Bad - contains no useful information</label><br />' +
+			                '<input id="rating_' + i + '2" name="rating_' + i + '" required="" type="radio" value="2" /> <label for="rating_' + i + '2">2: Fair - marginally useful information</label><br />' +
+			                '<input id="rating_' + i + '3" name="rating_' + i + '" required="" type="radio" value="3" /> <label for="rating_' + i + '3">3: Good - partially answers the question</label><br />' +
+			                '<input id="rating_' + i + '4" name="rating_' + i + '" required="" type="radio" value="4" /> <label for="rating_' + i + '4">4: Excellent - fully answers the question</label>'+
+			            '</div>' +
+				      '</div>';
 					$("#answers").append(answerHtmlBlock);
 
 					// Add onchange event handler to sent ratings to the server.
