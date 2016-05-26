@@ -168,7 +168,7 @@
 
 		var timer;
 		var hitTimer;
-		var timerTime = 0;
+		var questionTime = 0;
 		var hitTimeLeft = 15 * 60;
 		var checkAnswersTimer;
 
@@ -225,8 +225,8 @@
 			  $("#question_title").text(data["title"]);
 			  $("#question_body").text(data["body"]);
 			  // Get the time left.
-			  timerTime = data["timeLeft"] - 10;
-			  setTimeout(hideQuestion, timerTime * 1000);
+			  questionTime = data["timeLeft"] - 10;
+			  setTimeout(hideQuestion, questionTime * 1000);
 			  answers = [];
 			  showQuestion();
 			  questionsReceived += 1;
@@ -256,9 +256,9 @@
 
 			clearInterval(timer);
 			timer = setInterval(updateQuestionTimer, 1000);
-
+			
 			// Check for answers.
-			checkAnswersTimer = setTimeout(getAnswers, 1000);
+			getAnswers()
 		}
 
 		function hideQuestion() {
@@ -270,7 +270,7 @@
 			$("#category").hide();
 			$("#answers").html('<div class="col s12" id="no_answers_yet"><div class="card-panel">Please wait, the answers are coming...</div></div>');
 			$("#answers").hide();
-			timerTime = 60;
+			questionTime = 60;
 			clearInterval(timer);
 
 			// Check for new questions in a second.
@@ -278,9 +278,9 @@
 		}
 
 		function updateQuestionTimer() {
-			timerTime--;
-			var mins = Math.floor(timerTime / 60);
-			var secs = timerTime % 60;
+			questionTime--;
+			var mins = Math.floor(questionTime / 60);
+			var secs = questionTime % 60;
 			$("#timer").text("Question time: " + ('0' + mins).slice(-2) + ":" + ('0' + secs).slice(-2));
 		}
 
@@ -326,7 +326,9 @@
 			}).fail(function() {
 				console.log("failed getting answers");
 			});
-			checkAnswersTimer = setTimeout(getAnswers, 1000);
+			if (questionTime > 5) {
+				checkAnswersTimer = setTimeout(getAnswers, 2000);
+			}
 		}
 
 		function addAnswersToRate(data) {
