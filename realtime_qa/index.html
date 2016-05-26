@@ -73,9 +73,9 @@
 	      <div class="col s8 offset-s2">
 	      	<div class="card">
 	            <div class="card-content">
-	              <span class="badge left" id="category">category</span>
+	              <span class="badge left" id="category" style="margin-top: -10px">category</span>
 	              <div id="question" style="display:none">
-		              <div class="card-title" id="question_title">question_title</div>
+		              <h4 id="question_title" style="font-size:14pt">question_title</h4>
 		              <p id="question_body">question_body</p>
 		              <br />
 		              <hr />
@@ -346,10 +346,10 @@
 			            '<div class="card-panel">' +
 			              '<p>' + answer + '</p>' +
 			                '<hr />' +
-			                '<input id="rating_' + i + '1" name="rating_' + i + '" required="" type="radio" value="1" /> <label for="rating_' + i + '1">1: Bad - contains no useful information</label><br />' +
-			                '<input id="rating_' + i + '2" name="rating_' + i + '" required="" type="radio" value="2" /> <label for="rating_' + i + '2">2: Fair - marginally useful information</label><br />' +
-			                '<input id="rating_' + i + '3" name="rating_' + i + '" required="" type="radio" value="3" /> <label for="rating_' + i + '3">3: Good - partially answers the question</label><br />' +
-			                '<input id="rating_' + i + '4" name="rating_' + i + '" required="" type="radio" value="4" /> <label for="rating_' + i + '4">4: Excellent - fully answers the question</label>'+
+			                '<input id="rating_' + i + '1" name="rating_' + i + '" required="" type="radio" value="1" /> <label for="rating_' + i + '1" style="font-size: 10pt;">1: Bad - contains no useful information</label><br />' +
+			                '<input id="rating_' + i + '2" name="rating_' + i + '" required="" type="radio" value="2" /> <label for="rating_' + i + '2" style="font-size: 10pt;">2: Fair - marginally useful information</label><br />' +
+			                '<input id="rating_' + i + '3" name="rating_' + i + '" required="" type="radio" value="3" /> <label for="rating_' + i + '3" style="font-size: 10pt;">3: Good - partially answers the question</label><br />' +
+			                '<input id="rating_' + i + '4" name="rating_' + i + '" required="" type="radio" value="4" /> <label for="rating_' + i + '4" style="font-size: 10pt;">4: Excellent - fully answers the question</label>'+
 			            '</div>' +
 				      '</div>';
 					$("#answers").append(answerHtmlBlock);
