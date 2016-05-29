@@ -173,6 +173,7 @@
 		var checkAnswersTimer;
 
 		var answers = [];
+		var answers_texts = [];
 
 		$(document).ready(function(){
 			assignmentId = getURLParameter('assignmentId');
@@ -228,6 +229,7 @@
 			  questionTime = data["timeLeft"] - 10;
 			  setTimeout(hideQuestion, questionTime * 1000);
 			  answers = [];
+			  answers_texts = [];
 			  showQuestion();
 			  questionsReceived += 1;
 			  $("#formQuestionsReceived").val(questionsReceived);
@@ -340,11 +342,14 @@
 			  if (answers.indexOf(aid) < 0) {
 				  answers.push(aid);
 				  var answer = data[i]["answer"];
+				  var shortAnswer = data[i]["answer"].substring(0, 300) + "..."
+				  answers_texts.push(answer);
+
 			      var answerHtmlBlock = 
 				      '<div class="col s4 answer-card animated" id="answer_' + i + '">' +
 				        '<input type="hidden" name="answer_id_' + i + '" id="answer_id_' + i + '" value="' + aid + '" />' +
 			            '<div class="card-panel">' +
-			              '<p>' + answer + '</p>' +
+			              '<p id="answer_text_' + i + '">' + shortAnswer + '</p><a id="show_all_' + i + '" href="#" onclick="showAllAnswer(' + i + ')">show all</a>' +
 			                '<hr />' +
 			                '<input id="rating_' + i + '1" name="rating_' + i + '" required="" type="radio" value="1" /> <label for="rating_' + i + '1" style="font-size: 10pt;">1: Bad - contains no useful information</label><br />' +
 			                '<input id="rating_' + i + '2" name="rating_' + i + '" required="" type="radio" value="2" /> <label for="rating_' + i + '2" style="font-size: 10pt;">2: Fair - marginally useful information</label><br />' +
@@ -368,6 +373,11 @@
 			}
 
 			$(".answer-card").slice(3).hide();
+		}
+
+		function showAllAnswer(i) {
+			$("#answer_text_" + i).text(answers_texts[i]);
+			$("#show_all_" + i).hide();
 		}
 	</script>
     </body>
